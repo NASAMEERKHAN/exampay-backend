@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background:#f4f6f9;
+            margin:0;
+        }
+
+        .header {
+            background:#003366;
+            color:white;
+            padding:15px;
+            text-align:center;
+            font-size:22px;
+        }
+
+        .filter {
+            text-align:center;
+            margin:20px;
+        }
+
+        table {
+            width:90%;
+            margin:auto;
+            border-collapse:collapse;
+            background:white;
+            border-radius:10px;
+            overflow:hidden;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding:12px;
+            text-align:center;
+        }
+
+        th {
+            background:#003366;
+            color:white;
+        }
+
+        tr:nth-child(even){
+            background:#f9f9f9;
+        }
+
+        button {
+            padding:6px 12px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        .card{
+        padding :15px 25px;
+        border-radius:10px;
+        color:white;
+        font-weight:bold;
+        font-size:16px;
+        box-shadow:0 4px 10px rgba(0,0,0,0.2);
+        }
+        .green{background:#28a745;}
+        .red{background:#dc3545;}
+        .blue{background:#007bff;}
+
+
+
+
+        .notify-btn {
+            padding:12px 18px;
+            margin:8px;
+            border:none;
+            border-radius:8px;
+            font-weight:bold;
+            cursor:pointer;
+            color:white;
+            transition:0.3s;
+            box-shadow:0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .notify-btn:hover {
+            transform:scale(1.05);
+        }
+        .y1{background:#007bff;}
+        .y2{background:#ffc107; color:black;}
+        .y3{background:#007bff;}
+        .y4{background:#ffc107; color:black;}
+
+        .expand-btn {
+            background:#007bff;
+            color:white;
+        }
+
+        .expand-btn:hover {
+            background:#0056b3;
+        }
+
+        .sem-table {
+            width:100%;
+            margin-top:10px;
+            border-collapse:collapse;
+        }
+
+        .sem-table th {
+            background:#555;
+        }
+
+        .sem-table td, .sem-table th {
+            padding:8px;
+            border:1px solid #ccc;
+        }
+
+        /* Student Button */
+.notify-student-btn{
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.notify-student-btn:hover{
+    transform: scale(1.08);
+    background: linear-gradient(135deg, #218838, #17a2b8);
+}
+
+
+/* HOD Button */
+.notify-hod-btn{
+    background: linear-gradient(135deg, #007bff, #6610f2);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.notify-hod-btn:hover{
+    transform: scale(1.08);
+    background: linear-gradient(135deg, #0056b3, #520dc2);
+}
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="header" style="display:flex; justify-content:space-between; align-items:center;">
+
+    <div>Admin Dashboard - ExamPay</div>
+
+    <div>
+        Welcome BSS
+        <button onclick="logout()" style="margin-left:10px; background:red; color:white;">
+            Logout
+        </button>
+    </div>
+
+</div>
+
+
+<div class="filter">
+    Filter by Department:
+    <select id="deptFilter" onchange="filterDept()">
+        <option value="ALL">ALL</option>
+        <option value="CSE">CSE</option>
+        <option value="CSE(DS)">CSE(DS)</option>
+        <option value="AI&DS">AI&DS</option>
+        <option value="ECE">ECE</option>
+        <option value="EEE">EEE</option>
+        <option value="MECH">MECH</option>
+    </select>
+    <div id="analyticsBox" style="
+display:flex;
+justify-content:center;
+gap:30px;
+margin:20px;
+">
+
+        <div class="card green">Paid: <span id="paidCount"></span></div>
+        <div class="card red">Unpaid: <span id="pendingCount"></span></div>
+        <div class="card blue">Total: <span id="totalCount"></span></div>
+
+    </div>
+
+
+
+
+
+    <div style="text-align:center; margin:20px;">
+
+        <button class="notify-btn y1" onclick="notifyYear(1)">Notify 1st Year</button>
+        <button class="notify-btn y2" onclick="notifyYear(2)">Notify 2nd Year</button>
+        <button class="notify-btn y3" onclick="notifyYear(3)">Notify 3rd Year</button>
+        <button class="notify-btn y4" onclick="notifyYear(4)">Notify 4th Year</button>
+
+    </div>
+
+
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>↓</th>
+        <th>Student ID</th>
+        <th>Department</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+
+    <tbody id="tableBody"></tbody>
+
+</table>
+
+<script>
+
+    let allData = [];
+
+    async function loadAnalytics(){
+
+let res = await fetch("http://localhost:8080/admin/analytics");
+let data = await res.json();
+
+document.getElementById("paidCount").innerText = data.paid;
+document.getElementById("pendingCount").innerText = data.pending;
+document.getElementById("totalCount").innerText = data.total;
+
+}
+
+loadAnalytics();
+
+    async function loadData(){
+
+    let res = await fetch("http://localhost:8080/admin/payments");
+    allData = await res.json();
+
+    render(allData);
+    }
+
+function render(data){
+
+let table = document.getElementById("tableBody");
+table.innerHTML = "";
+
+data.forEach(s => {
+
+let semTable = `
+<table class="sem-table">
+<tr>
+<th>Semester</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+${s.semesters.map(sem => `
+<tr>
+<td>${sem.semester}</td>
+<td>₹${sem.amount}</td>
+<td>${sem.status}</td>
+<td>
+${sem.status === "PAID"
+? `<button class="notify-hod-btn" onclick="notifyHod('${s.studentId}','${sem.semester}')">Notify HOD</button>`
+: `<button class="notify-student-btn" onclick="notifyStudent('${s.studentId}','${sem.semester}')">Notify Student</button>`
+}
+</td>
+</tr>
+`).join("")}
+
+</table>
+`;
+
+let row = `
+<tr>
+<td><button class="expand-btn" onclick="toggle('${s.studentId}')">↓</button></td>
+<td>${s.studentId}</td>
+<td>${s.department}</td>
+<td>${s.status}</td>
+</tr>
+
+<tr id="row-${s.studentId}" style="display:none">
+<td colspan="4">
+${semTable}
+</td>
+</tr>
+`;
+
+table.innerHTML += row;
+
+});
+}
+
+    function toggle(id){
+    let row = document.getElementById("row-" + id);
+    row.style.display = row.style.display === "none" ? "table-row" : "none";
+    }
+
+    function filterDept(){
+    let dept = document.getElementById("deptFilter").value;
+
+    if(dept === "ALL"){
+    render(allData);
+    }else{
+    render(allData.filter(s => s.department === dept));
+    }
+    }
+async function notifyHod(studentId, semester){
+
+    console.log("Notify HOD:", studentId, semester);
+
+    let dept = studentId.startsWith("CSEDS") ? "CSE_DS" :
+               studentId.startsWith("AIDS") ? "AI_DS" :
+               studentId.startsWith("CSE") ? "CSE" :
+               studentId.startsWith("ECE") ? "ECE" :
+               studentId.startsWith("EEE") ? "EEE" :
+               "MECH";
+
+    await fetch("http://localhost:8080/student/notify-hod", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            receiver: dept,
+            message: studentId + " paid " + semester,
+            type: "HOD",
+            semester: semester,
+            studentId: studentId
+        })
+    });
+
+    console.log({receiver:dept, studentId, semester});
+
+    alert("HoD Notified Successfully!");
+}
+
+
+
+    async function notifyStudent(studentId,semester){
+    await fetch(`http://localhost:8080/admin/notify-student/${studentId}/${semester}`, {method:"POST"});
+    alert('Notification sent for ${semester}');
+    }
+
+
+
+    loadData();
+
+    async function notifyYear(year){
+
+await fetch(`http://localhost:8080/admin/notify-year/${year}`, {
+    method:"POST"
+});
+
+alert("Notifications sent to Year " + year);
+}
+
+    function logout(){
+    window.location.href="admin-login.html";
+    }
+
+
+
+</script>
+
+</body>
+</html>
+
