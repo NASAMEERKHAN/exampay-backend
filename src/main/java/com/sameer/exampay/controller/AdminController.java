@@ -74,9 +74,13 @@ public class AdminController {
             AdminDTO dto = new AdminDTO();
 
             dto.setStudentId(s.getHallTicketNumber());
-            dto.setDepartment(s.getBranch());
+
+            dto.setDepartment(s.getDept());
+
 
             List<SemesterDTO> semList = new ArrayList<>();
+
+
 
             // 🔥 GET DATA FROM SemesterPayment TABLE (IMPORTANT FIX)
             List<SemesterPayment> payments =

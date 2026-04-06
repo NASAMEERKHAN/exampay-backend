@@ -43,18 +43,20 @@ public class StudentController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Student loginRequest){
 
-        String hallTicket = loginRequest.getHallTicketNumber().trim();
+        String hallTicket = loginRequest.getHallTicketNumber().trim().toUpperCase();
         String password = loginRequest.getPassword().trim();
 
         Student student = studentRepository
                 .findByHallTicketNumberIgnoreCase(hallTicket);
 
+        System.out.println("LOGIN INPUT: " + loginRequest.getHallTicketNumber() + " | " + loginRequest.getPassword());
         if(student == null){
             return ResponseEntity.status(401).body("Invalid Hall Ticket");
         }
 
         if(!student.getPassword().equals(password)){
             return ResponseEntity.status(401).body("Invalid Password");
+
         }
 
         return ResponseEntity.ok(student);
@@ -89,12 +91,32 @@ public class StudentController {
         // 1️⃣ Save student
         Student savedStudent = studentRepository.save(student);
 
+        String[] semesters={
+                "1-1","1-2",
+                "2-1","2-2",
+                "3-1","3-2",
+                "4-1","4-2"
+        };
         // 2️⃣ Create semester payments
-        for(int i = 1; i <= 8; i++){
+        for(String sem : semesters){
             SemesterPayment p = new SemesterPayment();
             p.setHallTicketNumber(savedStudent.getHallTicketNumber());
-            p.setSemester(String.valueOf(i));
-            p.setAmount(8750.0);
+            p.setSemester(sem);
+
+
+// extract last digit
+            char lastChar = hallTicket.charAt(hallTicket.length() - 1);
+            int lastDigit = Character.getNumericValue(lastChar);
+
+            double amount;
+
+            if(lastDigit % 2 == 0){
+                amount = 12000.0; // EVEN
+            } else {
+                amount = 8750.0; // ODD
+            }
+
+            p.setAmount(amount);
             p.setStatus("PENDING");
 
             semesterPaymentRepository.save(p);
