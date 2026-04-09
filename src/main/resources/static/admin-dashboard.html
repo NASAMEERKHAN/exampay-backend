@@ -328,8 +328,8 @@ async function notifyHod(studentId, semester){
 
     console.log("Notify HOD:", studentId, semester);
 
-    let dept = studentId.startsWith("CSEDS") ? "CSE_DS" :
-               studentId.startsWith("AIDS") ? "AI_DS" :
+    let dept = studentId.startsWith("CSDS") ? "CSDS" :
+               studentId.startsWith("AIDS") ? "AIDS" :
                studentId.startsWith("CSE") ? "CSE" :
                studentId.startsWith("ECE") ? "ECE" :
                studentId.startsWith("EEE") ? "EEE" :
