@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Exam Fee Payment</title>
+
+    <style>
+
+        body{
+        font-family:Arial;
+        text-align:center;
+        padding:40px;
+        background:#f5f5f5;
+        }
+
+        .box{
+        background:white;
+        padding:30px;
+        border-radius:10px;
+        width:400px;
+        margin:auto;
+        box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2{
+        color:#003366;
+        }
+
+        img{
+        margin-top:20px;
+        }
+
+        button{
+        margin-top:15px;
+        padding:10px 20px;
+        background:#003366;
+        color:white;
+        border:none;
+        border-radius:5px;
+        cursor:pointer;
+        }
+
+        button:hover{
+        background:#002244;
+        }
+
+        .pay-btn{
+        background:#28a745;
+        }
+
+        .pay-btn:hover{
+        background:#1f8a37;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>Exam Fee Payment</h2>
+
+    <p id="semesterText"></p>
+
+    <h3 id="amountText"></h3>
+
+    <img id="qrImage" width="250"/>
+
+    <p>Scan using PhonePe / Google Pay / Paytm</p>
+
+    <!-- UPI PAYMENT BUTTON -->
+    <a id="upiLink">
+        <button class="pay-btn">Pay Using UPI App</button>
+    </a>
+
+    <br>
+
+    <button onclick="goBack()">Back to Dashboard</button>
+
+</div>
+
+<script>
+
+    let amount = localStorage.getItem("payAmount")
+    let semester = localStorage.getItem("paySemester")
+
+    document.getElementById("semesterText").innerText =
+    "Semester " + semester
+
+    document.getElementById("amountText").innerText =
+    "Amount : ₹" + amount
+
+    let upiId = "9866956670-5@ybl"
+
+    let upiLink =
+    `upi://pay?pa=${upiId}&pn=ExamPay&am=${amount}&cu=INR`
+
+    /* SET UPI LINK */
+
+    document.getElementById("upiLink").href = upiLink
+
+    /* GENERATE QR */
+
+    let qr =
+    `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiLink)}`
+
+    document.getElementById("qrImage").src = qr
+
+
+    function goBack(){
+    window.location.href="student.html"
+    }
+
+</script>
+
+</body>
+
+</html>
+

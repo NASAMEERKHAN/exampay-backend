@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HoD Login</title>
+
+  <style>
+    body {
+        margin: 0;
+        font-family: Arial;
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .login-box {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #2980b9;
+    }
+
+    .error {
+        color: red;
+        margin-top: 10px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="login-box">
+  <h2>HoD Login</h2>
+
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+
+  <div class="error" id="errorMsg"></div>
+</div>
+
+<script>
+
+  function login() {
+
+      let user = document.getElementById("username").value;
+      let pass = document.getElementById("password").value;
+
+      fetch("https://exampay-backend.onrender.com/hod/login", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              username: user,
+              password: pass
+          })
+      })
+      .then(res => {
+          if(!res.ok){
+              throw new Error("Server response error");
+          }
+          return res.json();
+      })
+      .then(data => {
+
+          console.log("Response:", data); // 🔍 DEBUG
+
+          if(data && data.username){
+             localStorage.setItem("hod", JSON.stringify(data));
+
+              window.location.href = "hod-dashboard.html";
+          } else {
+              document.getElementById("errorMsg").innerText = "Invalid Credentials!";
+          }
+
+      })
+      .catch(err => {
+          console.error(err);
+          document.getElementById("errorMsg").innerText = "Server Error!";
+      });
+  }
+
+</script>
+
+
+</body>
+</html>
