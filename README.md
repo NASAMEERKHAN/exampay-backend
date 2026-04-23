@@ -1,4 +1,5 @@
 🚀 PaySphere– Secure Exam Fee & Hall Ticket Management System
+
 Developed a secure backend system for exam fee management using Spring Boot. 
 Implemented JWT-based authentication and role-based authorization for ADMIN and STUDENT roles. 
 Integrated BCrypt for password security and deployed MySQL database on Railway cloud. 
