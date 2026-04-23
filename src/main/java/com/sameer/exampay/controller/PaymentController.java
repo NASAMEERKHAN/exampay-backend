@@ -27,7 +27,7 @@ public class PaymentController {
         this.examRepository = examRepository;
     }
 
-    // CREATE PAYMENT
+
     @PostMapping
     public Payment createPayment(@RequestBody Payment payment) {
 
@@ -44,7 +44,6 @@ public class PaymentController {
         return paymentRepository.save(payment);
     }
 
-    // GET ALL PAYMENTS
     @GetMapping
     public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
