@@ -12,10 +12,10 @@ public class Hod {
     private String username;
     private String password;
 
-    @Column(name = "department")   // 🔥 FIX
+    @Column(name = "department")   
     private String dept;
 
-    // getters
+    
     public Long getId() {
         return id;
     }
@@ -32,7 +32,7 @@ public class Hod {
         return dept;
     }
 
-    // setters
+    
     public void setId(Long id) {
         this.id = id;
     }
