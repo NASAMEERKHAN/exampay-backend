@@ -12,19 +12,19 @@ public class Payment {
 
     private Long studentId;
 
-    private Long examId;   // required for exam payments
+    private Long examId;   
 
     private double amount;
 
-    private String paymentStatus;   // PAID / PENDING
+    private String paymentStatus;   
 
     private String receiptId;
 
-    private String approvalStatus;  // APPROVED / PENDING
+    private String approvalStatus;  
 
     private LocalDateTime paymentDate;
 
-    // -------- GETTERS AND SETTERS --------
+    
 
     public Long getId() {
         return id;
