@@ -14,7 +14,7 @@ public class NotificationController {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    // 🔥 HIDE NOTIFICATION API
+    
     @PutMapping("/hide/{id}")
     public String hideNotification(@PathVariable Long id){
 
