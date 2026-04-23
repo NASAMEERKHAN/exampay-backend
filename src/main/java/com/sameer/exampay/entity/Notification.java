@@ -9,17 +9,17 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String receiver;   // CSE101
+    private String receiver;   
     private String message;
     private String studentId;
-    private String type;       // STUDENT / HOD
+    private String type;       
     private boolean isRead;
     private String createdAt;
     private boolean isHidden;
     private String semester;
 
 
-    // GETTERS & SETTERS
+    
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
