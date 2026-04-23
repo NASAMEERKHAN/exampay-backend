@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    // 🔥 case-insensitive search
+    
     Student findByHallTicketNumberIgnoreCase(String hallTicketNumber);
 
     List<Student> findByDept(String dept);
